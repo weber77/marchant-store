@@ -28,7 +28,7 @@ export const PRODUCTS: Product[] = [
     id: "demo-tote",
     name: "Canvas tote",
     description: "Reinforced straps, natural color.",
-    unitPrice: 34,
+    unitPrice: 0.1,
     currency: "USD",
     imageEmoji: "🛍️",
   },

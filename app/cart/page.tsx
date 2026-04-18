@@ -47,7 +47,10 @@ export default function CartPage() {
       if (!url) {
         throw new Error("No checkout_url in response");
       }
-      window.location.href = url;
+      const opened = window.open(url, "_blank", "noopener,noreferrer");
+      if (!opened) {
+        window.location.assign(url);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Checkout failed");
     } finally {
