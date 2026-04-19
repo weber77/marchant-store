@@ -46,15 +46,21 @@ export async function POST(req: Request) {
   const crypto_currency =
     json.crypto_currency ?? process.env.WAKARI_CHECKOUT_CRYPTO ?? "USDT";
 
+  const user = json.user ?? {
+    id: "guest",
+    email: "guest@demo.local",
+  };
+
   const payload = {
-    user: json.user ?? {
-      id: "guest",
-      email: "guest@demo.local",
-    },
+    user,
     items: json.items,
     currency,
     crypto_currency,
-    metadata: json.metadata ?? { source: "marchant-store" },
+    metadata: {
+      source: "marchant-store",
+      ...(json.metadata ?? {}),
+      ...(user.email ? { customer_email: user.email } : {}),
+    },
     ...(json.expires_in_minutes != null
       ? { expires_in_minutes: json.expires_in_minutes }
       : {}),
