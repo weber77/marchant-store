@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
 
 type CheckoutResponse = {
@@ -9,54 +12,63 @@ type CheckoutResponse = {
   session_id?: string;
 };
 
+async function postCheckout(items: ReturnType<typeof buildItems>) {
+  const res = await fetch("/api/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items,
+      user: {
+        id: "demo-customer",
+        email: "weberdubois@givam.me",
+      },
+    }),
+  });
+  const data = (await res.json()) as CheckoutResponse & {
+    error?: string;
+    detail?: unknown;
+  };
+  if (!res.ok) {
+    const msg =
+      typeof data.detail === "object" && data.detail !== null
+        ? JSON.stringify(data.detail)
+        : (data.error ?? "Checkout failed");
+    throw new Error(msg);
+  }
+  const url = data.checkout_url;
+  if (!url) {
+    throw new Error("No checkout_url in response");
+  }
+  return url;
+}
+
+function buildItems(lines: ReturnType<typeof useCart>["lines"]) {
+  return lines.map((l) => ({
+    name: l.product.name,
+    quantity: l.quantity,
+    unit_price: l.product.unitPrice,
+    product_id: l.product.id,
+  }));
+}
+
 export default function CartPage() {
   const { lines, setQty, remove, clear } = useCart();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  async function payWithCrypto() {
-    setError(null);
-    setBusy(true);
-    try {
-      const items = lines.map((l) => ({
-        name: l.product.name,
-        quantity: l.quantity,
-        unit_price: l.product.unitPrice,
-        product_id: l.product.id,
-      }));
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items,
-          user: {
-            id: "demo-customer",
-            email: "weberdubois@givam.me",
-          },
-        }),
-      });
-      const data = (await res.json()) as CheckoutResponse & {
-        error?: string;
-        detail?: unknown;
-      };
-      if (!res.ok) {
-        const msg =
-          typeof data.detail === "object" && data.detail !== null
-            ? JSON.stringify(data.detail)
-            : (data.error ?? "Checkout failed");
-        throw new Error(msg);
-      }
-      const url = data.checkout_url;
-      if (!url) {
-        throw new Error("No checkout_url in response");
-      }
+  const checkoutMutation = useMutation({
+    mutationFn: async () => postCheckout(buildItems(lines)),
+    onMutate: () => {
+      toast.loading("Creating checkout session…", { id: "checkout" });
+    },
+    onSuccess: (url) => {
+      toast.success("Redirecting to secure checkout…", { id: "checkout" });
       window.location.href = url;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Checkout failed");
-    } finally {
-      setBusy(false);
-    }
-  }
+    },
+    onError: (e) => {
+      toast.error(e instanceof Error ? e.message : "Checkout failed", {
+        id: "checkout",
+      });
+    },
+  });
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -113,27 +125,24 @@ export default function CartPage() {
             ))}
           </ul>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <button
+            <Button
               type="button"
-              disabled={busy}
-              onClick={payWithCrypto}
-              className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+              disabled={checkoutMutation.isPending}
+              onClick={() => checkoutMutation.mutate()}
             >
-              {busy ? "Starting checkout…" : "Pay with crypto"}
-            </button>
+              {checkoutMutation.isPending ? "Starting checkout…" : "Pay with crypto"}
+            </Button>
             <button
               type="button"
-              onClick={() => clear()}
+              onClick={() => {
+                clear();
+                toast.info("Cart cleared");
+              }}
               className="text-sm text-zinc-500 underline"
             >
               Clear cart
             </button>
           </div>
-          {error ? (
-            <p className="mt-4 text-sm text-red-600 dark:text-red-400">
-              {error}
-            </p>
-          ) : null}
           <p className="mt-6 text-xs text-zinc-500">
             Checkout is created server-side with HMAC. Configure keys in{" "}
             <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-900">
