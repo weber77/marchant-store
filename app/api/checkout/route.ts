@@ -42,7 +42,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "items required" }, { status: 400 });
   }
 
-  const currency = json.currency ?? process.env.WAKARI_CHECKOUT_CURRENCY ?? "USD";
+  const currency =
+    json.currency ?? process.env.WAKARI_CHECKOUT_CURRENCY ?? "USD";
   const crypto_currency =
     json.crypto_currency ?? process.env.WAKARI_CHECKOUT_CRYPTO ?? "USDT";
 
