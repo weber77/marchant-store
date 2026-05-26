@@ -1,26 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/lib/cart-context";
 
 export function StoreHeader() {
-  const { lines } = useCart();
-  const count = lines.reduce((n, l) => n + l.quantity, 0);
-
   return (
-    <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+    <header className="sticky top-0 z-30 border-b border-border/50 glass-panel">
+      <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link
           href="/"
-          className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
+          className="text-sm font-semibold tracking-tight transition-colors hover:text-[hsl(var(--fintech))]"
         >
-          Marchant demo store
+          <span className="gradient-text">WAKAPAY</span>
+          <span className="text-muted-foreground"> · Demo store</span>
         </Link>
         <Link
           href="/cart"
-          className="rounded-full border border-zinc-300 px-3 py-1 text-sm dark:border-zinc-600"
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-[hsl(var(--fintech))]"
         >
-          Cart{count ? ` (${count})` : ""}
+          Full cart page
         </Link>
       </div>
     </header>

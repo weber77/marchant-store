@@ -51,8 +51,8 @@ export async function POST(req: Request) {
   }
 
   const rawBody = await req.text();
-  const sig = req.headers.get("x-wakari-signature");
-  const ts = req.headers.get("x-wakari-timestamp");
+  const sig = req.headers.get("x-wakapay-signature");
+  const ts = req.headers.get("x-wakapay-timestamp");
   if (!sig || !ts) {
     return NextResponse.json(
       { error: "Missing signature headers" },
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const event = body.event ?? req.headers.get("x-wakari-event") ?? "";
+  const event = body.event ?? req.headers.get("x-wakapay-event") ?? "";
   const data =
     body.data && typeof body.data === "object"
       ? body.data

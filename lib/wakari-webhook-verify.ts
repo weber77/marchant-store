@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 /**
- * Verifies `X-Wakari-Signature` = hex(HMAC-SHA256(signing_secret, `${timestamp}.${rawBody}`)).
+ * Verifies `X-Wakapay-Signature` = hex(HMAC-SHA256(signing_secret, `${timestamp}.${rawBody}`)).
  * Use the raw request body string (bytes as UTF-8), not a re-serialized JSON object.
  */
 export function verifyWakariWebhookSignature(args: {

@@ -21,6 +21,7 @@ export async function POST(req: Request) {
   const apiUrl = process.env.WAKARI_API_URL?.replace(/\/$/, "");
   const publicKey = process.env.WAKARI_PUBLIC_KEY;
   const secret = process.env.WAKARI_SECRET;
+
   if (!apiUrl || !publicKey || !secret) {
     return NextResponse.json(
       {

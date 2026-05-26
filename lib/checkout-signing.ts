@@ -14,9 +14,9 @@ export function signCheckoutRequest(args: {
   return {
     headers: {
       "Content-Type": "application/json",
-      "X-Wakari-Key": args.publicKey,
-      "X-Wakari-Timestamp": timestamp,
-      "X-Wakari-Signature": signature,
+      "X-Wakapay-Key": args.publicKey,
+      "X-Wakapay-Timestamp": timestamp,
+      "X-Wakapay-Signature": signature,
       "Idempotency-Key": randomUUID(),
     } as Record<string, string>,
     body: rawBody,

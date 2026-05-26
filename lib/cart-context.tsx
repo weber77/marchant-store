@@ -105,6 +105,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
+export function useCartCount(lines: CartLine[]) {
+  return lines.reduce((n, l) => n + l.quantity, 0);
+}
+
 export function useCart() {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used within CartProvider");
