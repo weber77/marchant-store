@@ -26,7 +26,10 @@ export const PRODUCT_CATEGORIES = [
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
 /** Public asset at `public/products/{id}.png` */
-export function productImagePath(id: string, ext: "png" | "webp" | "jpg" = "png") {
+export function productImagePath(
+  id: string,
+  ext: "png" | "webp" | "jpeg" = "png",
+) {
   return `/products/${id}.${ext}`;
 }
 
@@ -70,7 +73,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   {
     id: "tip-coffee",
     name: "Buy me a coffee",
-    description: "Quick thank-you tip after a helpful stream, post, or office hours session.",
+    description:
+      "Quick thank-you tip after a helpful stream, post, or office hours session.",
     price: 5,
     currency: "USD",
     category: "Tips",
@@ -79,7 +83,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   {
     id: "tip-shoutout",
     name: "Live stream shoutout",
-    description: "Your name read on stream plus a pinned thank-you in chat (demo perk).",
+    description:
+      "Your name read on stream plus a pinned thank-you in chat (demo perk).",
     price: 25,
     currency: "USD",
     category: "Tips",
@@ -145,7 +150,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   {
     id: "physical-sweat",
     name: "Trail sweatshirt",
-    description: "Midweight fleece, unisex fit. Ships in 3–5 business days (demo).",
+    description:
+      "Midweight fleece, unisex fit. Ships in 3–5 business days (demo).",
     price: 68,
     currency: "USD",
     category: "Physical goods",
@@ -154,7 +160,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   {
     id: "physical-tote",
     name: "Canvas tote",
-    description: "Reinforced straps with embroidered WAKAPAY mark. Natural color.",
+    description:
+      "Reinforced straps with embroidered WAKAPAY mark. Natural color.",
     price: 28,
     currency: "USD",
     category: "Physical goods",
@@ -207,7 +214,8 @@ const PRODUCT_SEEDS: ProductSeed[] = [
   {
     id: "ticket-conference",
     name: "Fintech builders day — pass",
-    description: "Full-day access: keynotes, workshops, and partner expo (demo event).",
+    description:
+      "Full-day access: keynotes, workshops, and partner expo (demo event).",
     price: 199,
     currency: "USD",
     category: "Tickets",
