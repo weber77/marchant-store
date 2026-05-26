@@ -248,7 +248,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
 
 export const PRODUCTS: Product[] = PRODUCT_SEEDS.map((p) => ({
   ...p,
-  image: p.image ?? productImagePath(p.id),
+  image: p.image ?? productImagePath(p.id, "jpeg"),
 }));
 
 const PRODUCT_EMOJI: Record<string, string> = {
