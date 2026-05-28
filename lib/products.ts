@@ -42,7 +42,7 @@ const PRODUCT_SEEDS: ProductSeed[] = [
     name: "Support the developer",
     description:
       "One-time contribution to fund docs, fixes, and weekend OSS releases. Tax receipt not included (demo).",
-    price: 15,
+    price: 0.15,
     currency: "USD",
     category: "Donation",
     inStock: true,
