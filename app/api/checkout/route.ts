@@ -74,11 +74,25 @@ export async function POST(req: Request) {
     bodyObject: payload,
   });
 
-  const upstream = await fetch(`${apiUrl}/checkout-sessions`, {
-    method: "POST",
-    headers: signed.headers,
-    body: signed.body,
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${apiUrl}/checkout-sessions`, {
+      method: "POST",
+      headers: signed.headers,
+      body: signed.body,
+    });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        error: "Cannot reach Wakari API",
+        detail:
+          err instanceof Error
+            ? err.message
+            : "Check WAKARI_API_URL and that the API is running",
+      },
+      { status: 502 },
+    );
+  }
 
   const text = await upstream.text();
   let data: unknown = text;

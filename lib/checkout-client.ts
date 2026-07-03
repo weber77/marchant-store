@@ -23,10 +23,17 @@ export async function postCheckout(items: CheckoutItem[]) {
     }),
   });
 
-  const data = (await res.json()) as CheckoutResponse & {
-    error?: string;
-    detail?: unknown;
-  };
+  const text = await res.text();
+  let data: CheckoutResponse & { error?: string; detail?: unknown };
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(
+      res.ok
+        ? "Invalid checkout response"
+        : `Checkout failed (${res.status})`,
+    );
+  }
 
   if (!res.ok) {
     const msg =
